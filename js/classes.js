@@ -11,8 +11,8 @@ class Player {
             y: 0
         }
 
-        this.width = 90
-        this.height = 50
+        this.width = 60
+        this.height = 54
         this.frames = 0
         
     }
@@ -20,13 +20,13 @@ class Player {
     // draw the player
     draw() {
         const playerImage = new Image();
-        playerImage.src = './img/catSprites/please.png';
+        playerImage.src = './img/catSprites/catfr50.png';
         ctx.drawImage(
             playerImage, 
 
-            156 * this.frames,
+            80 * this.frames,
             0,
-            157,
+            80,
             72,
 
 
@@ -42,7 +42,7 @@ class Player {
     //update les properties du player - ne pas oublier de la call pour work
     update() {
         this.frames++
-        if (this.frames > 29){
+        if (this.frames > 49){
             this.frames = 0
         }
         this.draw()
@@ -114,8 +114,9 @@ class Ghost {
             y: 0
         }
 
-        this.width = 40
-        this.height = 40
+        this.width = 50
+        this.height = 65
+        this.frames = 0
     }
 
     // draw the player
@@ -124,11 +125,30 @@ class Ghost {
         // ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
 
         const ghostImage = new Image();
-        ghostImage.src = './img/sopGhost.png';
-        ctx.drawImage(ghostImage, this.pos.x, this.pos.y, this.width, this.height)
+        ghostImage.src = './img/ghostFr59.png';
+        // ctx.drawImage(ghostImage, this.pos.x, this.pos.y, this.width, this.height)
+
+        ctx.drawImage(
+            ghostImage, 
+
+            116 * this.frames,
+            0,
+            116,
+            140,
+
+
+            this.pos.x, 
+            this.pos.y, 
+            this.width, 
+            this.height)
+
     }
 
     update() {
+        this.frames++
+        if (this.frames > 58){
+            this.frames = 0
+        }
         this.draw()
         this.pos.x += this.velocity.x
         this.pos.y += this.velocity.y

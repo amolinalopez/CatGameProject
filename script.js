@@ -5,6 +5,9 @@ const ctx = canvas.getContext('2d');
 canvas.width = 900
 canvas.height = 590
 
+backgroundMusic.play();
+wannaPlay.play()
+
 //adds the player
 const player = new Player()
 
@@ -92,13 +95,14 @@ function animate(){
     requestAnimationFrame(animate) //to loop so it change the properties
     drawLayer()
 
-    //random ghosts and plateforms
+    //random plateforms
    if (platforms.at(-1).pos.x < 450) {
         platforms.push(new Platform({x: 900, y: getRandom(250, 500)}))
    }
-
-   if (ghosts.at(-1).pos.x < 800) {
-        ghosts.push(new Ghost({x: 900, y: getRandom(480, 500)}))
+    
+   //random ghosts 
+   if (ghosts.at(-1).pos.x < 650) {
+        ghosts.push(new Ghost({x: 900, y: getRandom(470, 500)}))
     }
   
    
@@ -118,18 +122,23 @@ function animate(){
             ghost : ghost
 
         })) {
+            purr.play()
             console.log('bye bye ghosty')
             player.velocity.y -= 30
             setTimeout(() => {
                 ghosts.splice(index, 1)
             }, 0 )
         } else if (
-            player.pos.x + player.width >= ghost.pos.x 
+            player.pos.x + player.width >= ghost.pos.x // cote gauche
             && 
             player.pos.y + player.height >= ghost.pos.y 
-         
+            &&
+            player.pos.x <= ghost.pos.x + ghost.width  //cote droit
+
              ){
                 console.log('you loser')
+                // death.play()
+
                 
         }
         
@@ -155,7 +164,7 @@ function animate(){
 
 
     //to go left or right not indefiniment + ne pas sortir du canvas posX
-    if(keys.right.pressed && player.pos.x < canvas.width*0.3){
+    if(keys.right.pressed && player.pos.x < canvas.width*0.5){
         player.velocity.x = 4
     } else if (keys.left.pressed && player.pos.x < 50) {
         player.velocity.x = -4
