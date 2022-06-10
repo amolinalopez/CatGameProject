@@ -1,3 +1,4 @@
+const scoreEL = document.querySelector('#scoreEl');
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -5,8 +6,10 @@ const ctx = canvas.getContext('2d');
 canvas.width = 900
 canvas.height = 590
 
-backgroundMusic.play();
-wannaPlay.play()
+let game = {
+    over : false,
+    active : true
+}
 
 //adds the player
 const player = new Player()
@@ -35,8 +38,40 @@ function drawLayer() {
   }
 
 
-// function tryAgain() {
-// }
+function tryAgain() {
+
+ //son de death
+    setTimeout(() => {
+        death.play()
+        }, 0);
+
+    setTimeout(() => {
+        document.querySelector('.loser').innerHTML = 'DEAD'
+        document.querySelector('.loser').style.display = 'flex'
+    },4000)
+
+        
+        setTimeout(() => {
+            document.querySelector('.loser').style.display = 'none'
+
+            document.querySelector('.loser2').innerHTML = 'TRY AGAIN ?'
+            document.querySelector('.loser2').style.display = 'flex'
+            wannaPlay.play()
+        }, 7000);
+    
+
+    setTimeout(() => {
+        game.over = true
+    }, 0)
+
+    setTimeout(() => {
+        game.active = false
+    }, 500)
+
+
+
+
+}
 
 
 //gravity
@@ -48,7 +83,7 @@ const hearts = [
 ]
 
 const ghosts = [
-    new Ghost({x:850, y:500})
+    new Ghost({x:850, y:450})
 ]
 
 //adds platforms
@@ -58,6 +93,8 @@ const platforms = [
     new Platform({x: 1500, y: 300}), 
 ]
 
+//to increment score on html
+let score = 0
 
 //pour les touches si elles sont pressed or not
 const keys = {
@@ -91,6 +128,12 @@ function getRandom(min, max) {
 
 //MAIN
 function animate(){
+    backgroundMusic.play();
+    if(!game.active){
+        return
+    }
+
+
     ctx.clearRect(0,0, canvas.width, canvas.height) // 🧽
     requestAnimationFrame(animate) //to loop so it change the properties
     drawLayer()
@@ -106,6 +149,7 @@ function animate(){
     }
   
    
+
     hearts.forEach(heart => {
     heart.draw()
     })
@@ -117,11 +161,18 @@ function animate(){
     ghosts.forEach((ghost, index) => {
         ghost.update()
         
+
+
+ // Collision GHOST       
         if (ghostCollison({
             player: player,
             ghost : ghost
 
         })) {
+            score += 1
+            console.log(score)
+            scoreEL.innerHTML = score
+
             purr.play()
             console.log('bye bye ghosty')
             player.velocity.y -= 30
@@ -136,15 +187,10 @@ function animate(){
             player.pos.x <= ghost.pos.x + ghost.width  //cote droit
 
              ){
-                console.log('you loser')
-                // death.play()
-
+                 tryAgain()
                 
         }
         
-       
-        // start back HERE ------------------------------------
-
     })
 
 
@@ -155,16 +201,9 @@ function animate(){
     //WINNER
 
 
-    //LOSER
-    // if (player.position.y < canvas.height) {
-    //     tryAgain()
-    // }
-
-
-
 
     //to go left or right not indefiniment + ne pas sortir du canvas posX
-    if(keys.right.pressed && player.pos.x < canvas.width*0.5){
+    if(keys.right.pressed && player.pos.x < canvas.width*0.56){
         player.velocity.x = 4
     } else if (keys.left.pressed && player.pos.x < 50) {
         player.velocity.x = -4
@@ -200,6 +239,8 @@ animate()
 
 // add event to interact and use keyboard 
 window.addEventListener('keydown', (e) => {
+    if(game.over) {
+        return}
     // console.log(e) //pour trouver leur KeyCode dans KeyboardEvent
     switch (e.keyCode){
         
@@ -226,6 +267,8 @@ window.addEventListener('keydown', (e) => {
 
 
 window.addEventListener('keyup', (e) => {
+    if(game.over) {
+        return}
     switch (e.keyCode){
         
         case 65: 

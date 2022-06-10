@@ -10,7 +10,6 @@ class Player {
             x: 0,
             y: 0
         }
-
         this.width = 60
         this.height = 54
         this.frames = 0
