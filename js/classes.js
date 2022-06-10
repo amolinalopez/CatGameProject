@@ -92,7 +92,6 @@ class Heart {
      }
 
      draw() {
-       
         const heartImage = new Image();
         heartImage.src = './img/heart.png';
         ctx.drawImage(heartImage, this.pos.x, this.pos.y, this.width, this.height)

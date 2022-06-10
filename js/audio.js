@@ -12,3 +12,5 @@ death.volume = 0.1
 const wannaPlay = new Audio('./audioFiles/screamGame.mp3')
 wannaPlay.volume = 0.8
 
+const goodSound1 = new Audio ('./audioFiles/gSound1.mp3')
+

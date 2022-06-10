@@ -29,6 +29,8 @@ const imageLayers = [
 ]
 
 const layers = imageLayers.map((src, i) => new Layer(src, i / 10))
+
+
 function drawLayer() {
     
     layers.forEach((layer, i) => {
@@ -46,31 +48,27 @@ function tryAgain() {
         }, 0);
 
     setTimeout(() => {
+        game.over = true
+    }, 0)
+
+    setTimeout(() => {
+       game.active = false
+    }, 500)
+
+    setTimeout(() => {
         document.querySelector('.loser').innerHTML = 'DEAD'
         document.querySelector('.loser').style.display = 'flex'
     },4000)
 
         
-        setTimeout(() => {
-            document.querySelector('.loser').style.display = 'none'
+    setTimeout(() => {
+        document.querySelector('.loser').style.display = 'none'
 
-            document.querySelector('.loser2').innerHTML = 'TRY AGAIN ?'
-            document.querySelector('.loser2').style.display = 'flex'
-            wannaPlay.play()
-        }, 7000);
+        document.querySelector('.loser2').innerHTML = 'TRY AGAIN ?'
+        document.querySelector('.loser2').style.display = 'flex'
+        wannaPlay.play()
+    }, 7000);
     
-
-    setTimeout(() => {
-        game.over = true
-    }, 0)
-
-    setTimeout(() => {
-        game.active = false
-    }, 500)
-
-
-
-
 }
 
 
@@ -79,11 +77,11 @@ const gravity = 1.2;
 
 //adds hearts - 3 win items
 const hearts = [
-    new Heart({x: 430, y: 417})
+    new Heart({x: 430, y: 507})
 ]
 
 const ghosts = [
-    new Ghost({x:850, y:450})
+    new Ghost({x:1050, y:450})
 ]
 
 //adds platforms
@@ -106,6 +104,9 @@ const keys = {
     } 
 }
 
+
+// FUNCTIONS
+
 //take the cat width to track when the ghost touches his x
 function ghostCollison({ player, ghost}){
     return (
@@ -119,11 +120,28 @@ function ghostCollison({ player, ghost}){
     )
 }
 
+// function when cat touches heart : 3 hearts to win the game
+function touchHeart({player,heart}){
+    return(
+        player.pos.x + player.width >= heart.pos.x
+        &&
+        player.pos.x <= heart.pos.x + heart.width
+        &&
+        player.pos.y + player.height >= heart.pos.y
+        &&
+        player.pos.y <= heart.pos.y + heart.height
+    )
+}
+
+
 
 //function random pour ghosts et plateformes
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+
+
 
 
 //MAIN
@@ -149,9 +167,21 @@ function animate(){
     }
   
    
+    // GO BACK HEERRRRRRRRRRRRRRREEEEEE
+    hearts.forEach((heart, index) => {
+        if(touchHeart({
+            player: player,
+            heart : heart
+        })){
+            goodSound1.play()
+            console.log('yey a HEART')
+            setTimeout(() => {
+                hearts.splice(index, 1)
+            }, 0 )
 
-    hearts.forEach(heart => {
-    heart.draw()
+        }
+
+        heart.draw()
     })
 
     platforms.forEach(platform => {
@@ -161,21 +191,19 @@ function animate(){
     ghosts.forEach((ghost, index) => {
         ghost.update()
         
-
-
- // Collision GHOST       
+        // Collision GHOST       
         if (ghostCollison({
             player: player,
             ghost : ghost
 
         })) {
             score += 1
-            console.log(score)
+            // console.log(score)
             scoreEL.innerHTML = score
 
             purr.play()
             console.log('bye bye ghosty')
-            player.velocity.y -= 30
+            player.velocity.y -= 20
             setTimeout(() => {
                 ghosts.splice(index, 1)
             }, 0 )
@@ -187,10 +215,8 @@ function animate(){
             player.pos.x <= ghost.pos.x + ghost.width  //cote droit
 
              ){
-                 tryAgain()
-                
+                 tryAgain()    
         }
-        
     })
 
 
