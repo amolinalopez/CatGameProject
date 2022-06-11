@@ -3,11 +3,13 @@ class Player {
     constructor() {
         this.pos = {
             x: 0,
+            x2: 0,
             y: 400
         }
         //pour le deplacement 
         this.velocity = {
             x: 0,
+            x2: 0,
             y: 0
         }
         this.width = 60
@@ -46,12 +48,13 @@ class Player {
         }
         this.draw()
         this.pos.x += this.velocity.x
+        this.pos.x2 += this.velocity.x2
         this.pos.y += this.velocity.y
         
 
         //le player ne doit pas tomber hors du canvas (-60 a height si background haut)
         if (this.pos.y + this.height + this.velocity.y <= canvas.height-45) {
-        this.velocity.y += gravity //gonna accelerate over time
+            this.velocity.y += gravity //gonna accelerate over time
         } else {
             this.velocity.y = 0
         }
@@ -167,7 +170,7 @@ class Layer {
       imgLayer.src = src
     }
     update() {
-      this.x -= this.velocity * player.velocity.x  //* instead
+      this.x -= this.velocity * player.velocity.x2  //* instead
       this.x %= canvas.width
     }
     draw() {

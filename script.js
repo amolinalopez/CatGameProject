@@ -271,11 +271,7 @@ function animate(){
 
 
     //to go left or right not indefiniment + ne pas sortir du canvas posX
-    if(keys.right.pressed && player.pos.x < canvas.width*0.56){
-        player.velocity.x = 4
-    } else if (keys.left.pressed && player.pos.x < 50) {
-        player.velocity.x = -4
-    } else {
+    if (player.pos.x > canvas.width*0.56) {
         player.velocity.x = 0
     }
 
@@ -287,7 +283,7 @@ function animate(){
         
         //retour en arriere
     } else if (keys.left.pressed && player.pos.x > 80) {
-        player.velocity.x = -4
+        // needed ?
     }
 
 
@@ -318,14 +314,19 @@ window.addEventListener('keydown', (e) => {
     // console.log(e) //pour trouver leur KeyCode dans KeyboardEvent
     switch (e.keyCode){
         
-        case 65: 
+        case 65:
+            if (keys.left.pressed === true) return
         // console.log('gauche')
+        player.velocity.x = player.velocity.x2 = -4
         keys.left.pressed = true // selects the object and changes property
         break
 
         case 68: 
+        if (keys.right.pressed === true) return
         // console.log('droite')
+        player.velocity.x = player.velocity.x2 = 4
         keys.right.pressed = true
+
         break
 
         case 87: 
@@ -347,11 +348,13 @@ window.addEventListener('keyup', (e) => {
         
         case 65: 
        // console.log('gauche')
+        player.velocity.x = player.velocity.x2 = 0
         keys.left.pressed = false
         break
 
         case 68: 
         //console.log('droite')
+        player.velocity.x = player.velocity.x2 = 0
         keys.right.pressed = false
         break
 
