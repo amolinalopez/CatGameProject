@@ -1,4 +1,5 @@
 const scoreEL = document.querySelector('#scoreEl');
+const heartScoreEl = document.querySelector('#heartScoreEl')
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -32,7 +33,6 @@ const layers = imageLayers.map((src, i) => new Layer(src, i / 10))
 
 
 function drawLayer() {
-    
     layers.forEach((layer, i) => {
       layer.update()
       layer.draw()
@@ -41,8 +41,6 @@ function drawLayer() {
 
 
 function tryAgain() {
-
- //son de death
     setTimeout(() => {
         death.play()
         }, 0);
@@ -72,12 +70,45 @@ function tryAgain() {
 }
 
 
+function youWin(){
+    backgroundMusic.pause();
+    setTimeout(() => {
+        game.over = true
+    }, 0)
+
+    setTimeout(() => {
+       game.active = false
+       endSong.play()
+    }, 400)
+
+    setTimeout(() => {
+        document.querySelector('.winner').innerHTML = ' YES !'
+        document.querySelector('.winner').style.display = 'flex'
+    },4000)
+
+        
+    setTimeout(() => {
+        document.querySelector('.winner').style.display = 'none'
+
+        document.querySelector('.winner2').innerHTML = 'thank you !'
+        document.querySelector('.winner2').style.display = 'flex'
+    }, 7000);
+
+    
+}
+
+
+
+
+
 //gravity
 const gravity = 1.2;
 
 //adds hearts - 3 win items
 const hearts = [
-    new Heart({x: 430, y: 507})
+    new Heart({x: 830, y: 370}),
+    new Heart({x: 1650, y: 318}),
+    new Heart({x: 2000, y: 518}),
 ]
 
 const ghosts = [
@@ -86,13 +117,14 @@ const ghosts = [
 
 //adds platforms
 const platforms = [
-    new Platform({x: 400, y: 450}), 
-    new Platform({x: 800, y: 400}), 
+    new Platform({x: 350, y: 450}), 
+    new Platform({x: 780, y: 400}), 
     new Platform({x: 1500, y: 300}), 
 ]
 
 //to increment score on html
 let score = 0
+let heartScore = 0
 
 //pour les touches si elles sont pressed or not
 const keys = {
@@ -169,20 +201,30 @@ function animate(){
    
     // GO BACK HEERRRRRRRRRRRRRRREEEEEE
     hearts.forEach((heart, index) => {
+        heart.draw()
+
+        //collision heart
         if(touchHeart({
             player: player,
             heart : heart
         })){
+            heartScore +=1
+            console.log("yey 1 heart")
+            heartScoreEl.innerHTML = heartScore
+
             goodSound1.play()
-            console.log('yey a HEART')
+            // console.log('yey a HEART')
             setTimeout(() => {
                 hearts.splice(index, 1)
             }, 0 )
 
-        }
+            if(heartScore === 3){
+                youWin()
+            }
 
-        heart.draw()
+        }
     })
+
 
     platforms.forEach(platform => {
         platform.draw()
@@ -249,6 +291,12 @@ function animate(){
     }
 
 
+    if (keys.right.pressed && player.pos.x > canvas.width*0.3) {
+        hearts.forEach((heart) => {
+            heart.pos.x -= 4
+        })
+    }
+
     //if the bottom of the player is less than the top of the platform
     // detection collision ac plateforme - x left and right sinon le player ne retombe pas !
     platforms.forEach((platform) => {
@@ -282,7 +330,7 @@ window.addEventListener('keydown', (e) => {
 
         case 87: 
         // console.log('haut')
-        player.velocity.y -= 13 // - car sur y il faut aller en bas
+        player.velocity.y -= 15 // - car sur y il faut aller en bas
         break
 
         case 83: 
@@ -309,7 +357,7 @@ window.addEventListener('keyup', (e) => {
 
         case 87: 
         //console.log('haut')
-        player.velocity.y -= 13
+        player.velocity.y -= 15
 
         break
 

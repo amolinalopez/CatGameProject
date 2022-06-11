@@ -177,5 +177,5 @@ class Layer {
       ctx.drawImage(this.imgLayer, this.x + canvas.width, 0)
       ctx.drawImage(this.imgLayer, this.x - canvas.width, 0)
     }
-  }
+}
 
